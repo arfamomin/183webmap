@@ -12,7 +12,8 @@ let hoveredID = null;
 map.on("load", function() {
     map.addSource("points-data", {
         type: "geojson",
-        data: "https://raw.githubusercontent.com/arfamomin/c183webmap/refs/heads/main/data/183data.geojson"
+        data: "https://raw.githubusercontent.com/arfamomin/c183webmap/main/data/183data.geojson",
+        generateId: true
     })
 
     map.addLayer({
@@ -50,22 +51,22 @@ map.on("load", function() {
             .addTo(map);
     })
 
-    map.on('mouseenter', 'points-layer', () => {
+    map.on('mouseenter', 'points-layer', (e) => {
         map.getCanvas().style.cursor = 'pointer';
-        if (e.features.length > 0) {
+        if (e.features && e.features.length > 0) {
 
-                if (hoveredId !== null) {
-                    map.setFeatureState(
-                        { source: 'points-data', id: hoveredID},
-                        { hover: false }
-                    );
-                }
-                hoveredID = e.features[0].id;
+            if (hoveredID !== null) {
                 map.setFeatureState(
-                    { source: 'points-data', id: hoveredID },
-                    { hover: true }
+                    { source: 'points-data', id: hoveredID},
+                    { hover: false }
                 );
             }
+            hoveredID = e.features[0].id;
+            map.setFeatureState(
+                { source: 'points-data', id: hoveredID },
+                { hover: true }
+            );
+        }
     });
 
     map.on('mouseleave', 'points-layer', () => {
@@ -80,3 +81,5 @@ map.on("load", function() {
         hoveredID = null;
     });
 })
+
+// Followed this to create hover effect: https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
