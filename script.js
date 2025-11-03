@@ -27,7 +27,12 @@ map.on("load", function() {
                 '#c01d1d',
                 '#401dc0'
             ],
-            'circle-radius': 5,
+            'circle-radius': [
+                'case', 
+                ['boolean', ['feature-state', 'hover'], false],
+                7,
+                5
+            ],
             'circle-stroke-width': 2,
             'circle-stroke-color': '#ffffff'
         }
@@ -37,6 +42,7 @@ map.on("load", function() {
         const coordinates = e.features[0].geometry.coordinates.slice();
         const properties = e.features[0].properties;
 
+        // Note: My webscraped data didn't collect link info/ address so I omitted it. 
         const popupContent = `
             <div>
                 <h3>${properties.Landmark}</h3>
@@ -53,8 +59,8 @@ map.on("load", function() {
 
     map.on('mouseenter', 'points-layer', (e) => {
         map.getCanvas().style.cursor = 'pointer';
-        if (e.features && e.features.length > 0) {
 
+        if (e.features && e.features.length > 0) {
             if (hoveredID !== null) {
                 map.setFeatureState(
                     { source: 'points-data', id: hoveredID},
